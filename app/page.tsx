@@ -15,7 +15,7 @@ export default function Home() {
 
   return (
     <>
-      <div className='flex justify-center items-center gap-7'>
+      <div className='flex flex-col justify-center items-center gap-7'>
         {showTodoYelow && <Todolist />}
         {showTodoGreen && <TodolitsGreen />}
         {showTodoBlue && <TodolistBlue />}
