@@ -1,6 +1,6 @@
 'use client';
 
-export default function todolitsGreen() {
+export default function TodolitsGreen() {
   return (
     <div>
       <div className='w-[500px] h-[500px] bg-yellow-200'>

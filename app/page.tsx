@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import Todolist from '@/components/todolist';
-import todolitsGreen from '@/components/todolitsGreen';
+import TodolitsGreen from '@/components/TodolitsGreen';
+import TodolistBlue from '@/components/TodolistBlue';
+import TodolistRed from '@/components/TodolistRed';
 export default function Home() {
   const [showdivList, setShowdivList] = useState(false);
 
@@ -13,9 +15,11 @@ export default function Home() {
 
   return (
     <>
-      <div>
+      <div className='flex justify-center items-center gap-7'>
         {showTodoYelow && <Todolist />}
-        {showTodoRed && <todolitsGreen />}
+        {showTodoGreen && <TodolitsGreen />}
+        {showTodoBlue && <TodolistBlue />}
+        {showTodoRed && <TodolistRed />}
       </div>
       <div className='min-h-screen flex justify-end items-end'>
         <div className='flex flex-col items-end gap-3'>
