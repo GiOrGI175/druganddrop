@@ -54,6 +54,10 @@ export default function TodolistYellow() {
     });
   };
 
+  const handleDelateTask = (id: string) => {
+    setValuesArray((prev) => prev.filter((el) => el.id !== id));
+  };
+
   const handleDeleteAll = (): void => {
     setValuesArray([]);
     localStorage.removeItem('valueArray4');
@@ -103,19 +107,27 @@ export default function TodolistYellow() {
       <div>
         <ul>
           {valuesArray.map((task) => (
-            <li key={task.id} className='flex items-center mb-2'>
-              <input
-                type='checkbox'
-                checked={task.completed}
-                onChange={() => toggleCompletion(task.id)}
-                className='mr-2'
-              />
-              <span
-                className={task.completed ? 'line-through text-gray-500' : ''}
+            <div key={task.id} className='flex justify-between mb-[10px]'>
+              <li className='flex items-center mb-2'>
+                <input
+                  type='checkbox'
+                  checked={task.completed}
+                  onChange={() => toggleCompletion(task.id)}
+                  className='mr-2'
+                />
+                <span
+                  className={task.completed ? 'line-through text-gray-500' : ''}
+                >
+                  {task.text}
+                </span>
+              </li>
+              <button
+                onClick={() => handleDelateTask(task.id)}
+                className='p-2 bg-red-500 text-white rounded hover:bg-red-600'
               >
-                {task.text}
-              </span>
-            </li>
+                delate
+              </button>
+            </div>
           ))}
         </ul>
       </div>
