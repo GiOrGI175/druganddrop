@@ -74,7 +74,7 @@ export default function TodolitsGreen() {
   };
 
   return (
-    <div className='w-[500px] h-[500px] bg-green-200 p-4'>
+    <div className=' bg-green-200 p-4'>
       <div className='mb-4'>
         <button
           onClick={handleDeleteAll}

@@ -74,7 +74,7 @@ export default function TodolistRed() {
   };
 
   return (
-    <div className='w-[500px] h-[500px] bg-red-200 p-4'>
+    <div className=' bg-red-200 p-4'>
       <div className='mb-4'>
         <button
           onClick={handleDeleteAll}
