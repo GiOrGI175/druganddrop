@@ -14,6 +14,8 @@ export default function Home() {
   const [showTodoBlue, setShowTolistBlue] = useState(false);
   const [showTodoRed, setShowTolistRed] = useState(false);
 
+  import { Reorder } from 'framer-motion';
+
   return (
     <>
       <div className='flex flex-col justify-center items-center gap-7'>

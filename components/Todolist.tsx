@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useMotionValue, Reorder, useDragControls } from 'framer-motion';
+import { useRaisedShadow } from '@/constants/use-raised-shadow';
 
 type Task = {
   id: string;
@@ -11,6 +13,10 @@ type Task = {
 export default function TodolistYellow() {
   const [value, setValue] = useState<string>('');
   const [valuesArray, setValuesArray] = useState<Task[]>([]);
+
+  const y = useMotionValue(0);
+  const boxShadow = useRaisedShadow(y);
+  const dragControls = useDragControls();
 
   useEffect(() => {
     const localStorageValue = localStorage.getItem('valueArray1');
@@ -74,7 +80,12 @@ export default function TodolistYellow() {
   };
 
   return (
-    <div className='w-[500px] h-[500px] bg-yellow-200 p-4'>
+    <Reorder.Item
+      style={{ boxShadow, y }}
+      dragListener={false}
+      dragControls={dragControls}
+      className='w-[500px] h-[500px] bg-yellow-200 p-4'
+    >
       <div className='mb-4'>
         <button
           onClick={handleDeleteAll}
@@ -131,6 +142,6 @@ export default function TodolistYellow() {
           ))}
         </ul>
       </div>
-    </div>
+    </Reorder.Item>
   );
 }
