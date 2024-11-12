@@ -2,82 +2,122 @@
 
 import { useState, useEffect } from 'react';
 
-export default function TodolitsGreen() {
-  const [value, setValue] = useState('');
-  const [valuesArray, setValuesArray] = useState<string[]>([]);
+type Task = {
+  id: string;
+  text: string;
+  completed: boolean;
+};
 
-  const handleValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  };
+export default function TodolitsGreen() {
+  const [value, setValue] = useState<string>('');
+  const [valuesArray, setValuesArray] = useState<Task[]>([]);
 
   useEffect(() => {
-    const localStorageValue = JSON.parse(
-      localStorage.getItem('valueArray4') || '[]'
-    );
+    const localStorageValue = localStorage.getItem('valueArray4');
     if (localStorageValue) {
-      setValuesArray(localStorageValue);
+      try {
+        const parsedValue: Task[] = JSON.parse(localStorageValue);
+        setValuesArray(parsedValue);
+      } catch (error) {
+        console.error('Failed to parse tasks from localStorage:', error);
+      }
     }
   }, []);
 
-  const handleSetValue = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleValue = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setValue(e.target.value);
+  };
+
+  const handleSetValue = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
     if (value.trim()) {
+      const newTask: Task = {
+        id: Date.now().toString(),
+        text: value,
+        completed: false,
+      };
       setValuesArray((prev) => {
-        const updatedArray = [...prev, value];
-        localStorage.setItem('valueArray4', JSON.stringify(updatedArray));
-        return updatedArray;
+        const newValuesArray = [...prev, newTask];
+        localStorage.setItem('valueArray4', JSON.stringify(newValuesArray));
+        return newValuesArray;
       });
       setValue('');
     }
   };
-  const handleDelete = (index: number) => {
+  const toggleCompletion = (id: string) => {
     setValuesArray((prev) => {
-      const updatedArray = prev.filter((_, i) => i !== index);
-      localStorage.setItem('valueArray4', JSON.stringify(updatedArray));
-      return updatedArray;
+      const newValuesArray = prev.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      );
+      localStorage.setItem('valueArray4', JSON.stringify(newValuesArray));
+      return newValuesArray;
     });
   };
 
-  const handleDeleteAll = () => {
+  const handleDeleteAll = (): void => {
     setValuesArray([]);
     localStorage.removeItem('valueArray4');
   };
 
+  const handleDownload = (): void => {
+    const dataString = valuesArray.map((task) => task.text).join('\n');
+    const a = document.createElement('a');
+    const file = new Blob([dataString], { type: 'text/plain' });
+    a.href = URL.createObjectURL(file);
+    a.download = 'tasks.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+
   return (
-    <div>
-      <div className='w-[500px] h-[500px] bg-green-200'>
-        <div>
-          <button onClick={handleDeleteAll}>Delete All</button>
-          <button>Download</button>
-        </div>
-        <form onSubmit={handleSetValue}>
-          <div>
-            <input
-              type='text'
-              placeholder='Add a new task'
-              value={value}
-              onChange={handleValue}
-            />
-            <button type='submit'>Add</button>
-          </div>
-        </form>
-        <div>
-          <ul>
-            {valuesArray.map((task, index) => (
-              <li key={index}>
-                <div className='flex justify-between'>
-                  <div className='block'>
-                    <input type='checkbox' />
-                  </div>
-                  {task}
-                  <div>
-                    <button onClick={() => handleDelete(index)}>Delete</button>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <div className='w-[500px] h-[500px] bg-green-200 p-4'>
+      <div className='mb-4'>
+        <button
+          onClick={handleDeleteAll}
+          className='mr-4 p-2 bg-red-500 text-white rounded hover:bg-red-600'
+        >
+          Delete All
+        </button>
+        <button
+          onClick={handleDownload}
+          className='p-2 bg-green-500 text-white rounded hover:bg-green-600'
+        >
+          Download
+        </button>
+      </div>
+      <form onSubmit={handleSetValue} className='flex mb-4'>
+        <input
+          type='text'
+          value={value}
+          onChange={handleValue}
+          placeholder='Add a new task'
+          className='border p-2 flex-1 rounded mr-2'
+        />
+        <button
+          type='submit'
+          className='p-2 bg-blue-500 text-white rounded hover:bg-blue-600'
+        >
+          Add
+        </button>
+      </form>
+      <div>
+        <ul>
+          {valuesArray.map((task) => (
+            <li key={task.id} className='flex items-center mb-2'>
+              <input
+                type='checkbox'
+                checked={task.completed}
+                onChange={() => toggleCompletion(task.id)}
+                className='mr-2'
+              />
+              <span
+                className={task.completed ? 'line-through text-gray-500' : ''}
+              >
+                {task.text}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

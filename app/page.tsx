@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import Todolist from '@/components/todolist';
+import TodolistYellow from '@/components/Todolist';
 import TodolitsGreen from '@/components/TodolitsGreen';
 import TodolistBlue from '@/components/TodolistBlue';
 import TodolistRed from '@/components/TodolistRed';
+
 export default function Home() {
   const [showdivList, setShowdivList] = useState(false);
 
@@ -16,7 +17,7 @@ export default function Home() {
   return (
     <>
       <div className='flex flex-col justify-center items-center gap-7'>
-        {showTodoYelow && <Todolist />}
+        {showTodoYelow && <TodolistYellow />}
         {showTodoGreen && <TodolitsGreen />}
         {showTodoBlue && <TodolistBlue />}
         {showTodoRed && <TodolistRed />}
